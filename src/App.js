@@ -1,28 +1,29 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+import gql from 'graphql-tag'
+import { graphql } from 'react-apollo'
+
+
 class App extends Component {
+
   render() {
+    if (this.props.data.loading) {
+      return <div>Loading</div>
+    }
+    this.props.data.authors.forEach(function(e) { console.log(e.name)})
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        {this.props.data.authors.map(function(i){
+          return (<div>{i.name}</div>)
+        })}
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default graphql(gql`{
+                            authors {
+                              name 
+                            } 
+                          }`)(App)
